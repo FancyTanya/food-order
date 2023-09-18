@@ -1,0 +1,41 @@
+version: "3.3"
+
+networks:
+  network:
+
+volumes:
+  volume:
+
+
+services:
+  order_food:
+    build: ../../
+    restart: unless-stopped
+    environment:
+      H2_DB: order_db
+      H2_USER:
+      H2_PASSWORD:
+    networks:
+      network:
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+
+  database:
+    container_name: order_db
+    image: buildo/h2database
+    restart: always
+    networks:
+      network:
+    volumes:
+      - volume:/var/lib/h2database/data:rw
+    environment:
+      POSTGRES_DB: order_db
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+    ports:
+      - "9095:9092"
+
+
+
